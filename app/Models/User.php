@@ -29,4 +29,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    # RELACION CON CARRITO
+    public function carrito(){
+        return $this->hasOne(Carrito::class);
+    }
 }

@@ -24,7 +24,13 @@ class Producto extends Model
     ];
 
     //ESTABLECEMOS LA RELACION CON LAS CATEGORIAS
-    public function categorias(){
+    public function categoria(){
         return $this->belongsTo(Categoria::class, 'categoria_id');
     }
+
+    # RELACION CON CARRITO ITEMS
+    public function carrito_items(){
+        return $this->hasMany(CarritoItem::class);
+    }
+
 }

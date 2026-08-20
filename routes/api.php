@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\V1\CarritoController;
 use App\Http\Controllers\Api\V1\CategoriaController;
 use App\Http\Controllers\Api\V1\ProductoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\CarritoItemController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -47,4 +49,18 @@ Route::prefix('V1')->group(function(){
 
     #RUTA PARA ELIMINAR UNA CATEGORIA
     Route::delete('/categorias/{categoria}', [CategoriaController::class, 'destroy']);
+
+    # ---> CARRITO <--
+
+    #RUTAS MEDIANTE API RESOURSE
+    Route::apiResource('/carritos', CarritoController::class);
+
+    # ---> ITEMS DEL CARRITO <---
+
+    #RUTA PARA AGREGAR UN ITEM AL CARRITO
+    Route::post('/carritos/{carrito}/items', [CarritoItemController::class, 'store']);
+
+    #RUTA PARA ELIMINAR UN ITEM DEL CARRITO
+    Route::delete('/carritos/{carrito}/items', [CarritoItemController::class, 'destroy']);
+
 });

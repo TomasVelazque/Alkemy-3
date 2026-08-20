@@ -21,4 +21,14 @@ class CarritoItem extends Model
     protected $guarded = [
         'id'
     ];
+
+    # RELACION CON EL CARRITO
+    public function carrito(){
+        return $this->belongsTo(Carrito::class, 'carrito_id');
+    }
+
+    # RELACION CON PRODUCTO
+    public function producto(){
+        return $this->belongsTo(Producto::class, 'producto_id');
+    }
 }

@@ -14,4 +14,14 @@ class Carrito extends Model
         'user_id',
         'estado'
     ];
+
+    # RELACION CON CARRITO ITEM
+    public function carrito_items(){
+        return $this->hasMany(CarritoItem::class);
+    }
+
+    # RELACION CON USUARIO
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }
