@@ -6,18 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\UpdateProductoRequest;
 use App\Models\Producto;
+use App\DTO\ProductoDTO;
+use App\Http\Resources\ProductoResource;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ProductoController extends Controller
 {
     # FUNCION PARA MOSTRAR TODOS LOS PRODUCTOS DE LA DB
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
         #TOMAMOS TODOS LOS PRODUCTOS
-        $productos = Producto::all();
+        $productos = Producto::with('categoria')->get();
 
         #RETORNAMOS EN FORMATO JSON
-        return response()->json($productos);
+        return ProductoResource::collection($productos);
     }
 
     # FUNCION PARA CREAR UN PRODUCTO
@@ -26,8 +29,18 @@ class ProductoController extends Controller
         #VALIDAMOS LOS DATOS
         $datosValidados = $request->validated();
 
+        # $productoDTO = new ProductoDTO(
+        #     nombre_producto: $datosValidados['nombre_producto'],
+        #     descripcion_producto: $datosValidados['descripcion_producto'] ?? null,
+        #     precio_producto: (float) $datosValidados['precio_producto'],
+        #     stock_producto: (int) $datosValidados['stock_producto'],
+        #     categoria_id: (int) $datosValidados['categoria_id']
+        # );
+
+        $productoDTO = ProductoDTO::fromArray($datosValidados);
+
         #CREAMOS EL PRODUCTO
-        $producto = Producto::create($datosValidados);
+        $producto = Producto::create($productoDTO->toArray());
 
         #DEVOLVEMOS EN FORMATO JSON EL PRODUCTO CREADO
         return response()->json($producto);

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('carritos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->enum('estado', ['Activo', 'Abandonado', 'Pagado'])->default('Activo');
+            $table->enum('estado', ['Confirmado', 'No confirmado'])->default('No confirmado');
             $table->timestamps();
         });
     }

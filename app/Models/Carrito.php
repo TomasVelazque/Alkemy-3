@@ -24,4 +24,9 @@ class Carrito extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    # RELACION CON ORDEN
+    public function orden(){
+        return $this->hasOne(Orden::class);
+    }
 }
