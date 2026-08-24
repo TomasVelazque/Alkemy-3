@@ -75,11 +75,11 @@ class CarritoItemController extends Controller
     }
 
     #FUNCION PARA ELIMINAR UN ITEM DEL CARRITO
-    public function destroy(Request $request, Carrito $carrito){
+    public function destroy(Carrito $carrito, Producto $producto){
 
         #VALIDAMOS QUE EL PRODUCTO EXISTA EN EL CARRITO
         $item_carrito = CarritoItem::where('carrito_id', $carrito->id)
-                                    ->where('producto_id', $request->producto_id)
+                                    ->where('producto_id', $producto->id)
                                     ->first();
 
         if(!$item_carrito){
@@ -88,54 +88,12 @@ class CarritoItemController extends Controller
             ], 404);
         }
 
-        #RESTAURAMOS EL STOCK DEL PRODUCTO
-        $producto_db = Producto::findOrFail($request->producto_id);
-        $producto_db->stock_producto += $item_carrito->cantidad_producto;
-        $producto_db->save();
-
         #ELIMINAMOS EL ITEM DEL CARRITO
         $item_carrito->delete();
 
         #MANDAMOS UNA RESPUESTA EXITOSA
         return response()->json([
             'message' => 'Item eliminado del carrito exitosamente.'
-        ], 200);
-    }
-
-    #FUNCION PARA VACIAR EL CARRITO
-    public function clear(Carrito $carrito){
-
-        #VALIDAMOS SI EL CARRITO EXISTE
-        $existe_carrito = Carrito::findOrFail($carrito->id);
-        if(!$existe_carrito){
-            return response()->json([
-                'message' => 'El carrito no existe.'
-            ], 404);
-        }
-    
-        #OBTENEMOS TODOS LOS ITEMS DEL CARRITO
-        $items_carrito = CarritoItem::where('carrito_id', $carrito->id)->get();
-
-        #VALIDAMOS SI HAY ITEMS EN EL CARRITO
-        if($items_carrito->isEmpty()){
-            return response()->json([
-                'message' => 'El carrito esta vacio, no hay items para eliminar.'
-            ],404);
-        }
-
-        #RECORREMOS CADA ITEM PARA RESTAURAR EL STOCK DEL PRODUCTO
-        foreach($items_carrito as $item){
-            $producto_db = Producto::findOrFail($item->producto_id);
-            $producto_db->stock_producto += $item->cantidad_producto;
-            $producto_db->save();
-        }
-
-        #ELIMINAMOS TODOS LOS ITEMS DEL CARRITO
-        CarritoItem::where('carrito_id', $carrito->id)->delete();
-
-        #RETORNAMOS UNA RESPUESTA EXITOSA
-        return response()->json([
-            'message' => 'Carrito vaciado exitosamente.'
         ], 200);
     }
 }

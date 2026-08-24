@@ -38,19 +38,10 @@ Route::prefix('V1')->group(function(){
 
     #---------------------------------------------------------------------------
 
-    # ---> ITEMS DEL CARRITO <---
-
-    #RUTA PARA LISTAR LOS ITEMS DEL CARRITO
-    Route::get('/carrito-items/{carrito}', [CarritoItemController::class, 'index']);
-
-    #RUTA PARA AGREGAR UN ITEM AL CARRITO
-    Route::post('/carrito-items/{carrito}/create', [CarritoItemController::class, 'store']);
-
-    #RUTA PARA ELIMINAR UN ITEM DEL CARRITO
-    Route::post('/carrito-items/{carrito}/delete', [CarritoItemController::class, 'destroy']);
-
-    #RUTA PARA LIMPIAR EL CARRITO
-    Route::delete('/carrito-items/{carrito}/clear', [CarritoItemController::class, 'clear']);
+    # ---> ITEMS DEL CARRITO (Ruta Anidada) <---
+    Route::apiResource('carritos.items', CarritoItemController::class)
+        ->parameters(['items' => 'producto'])
+        ->only(['index','store', 'destroy']);
 
     #---------------------------------------------------------------------------
 
