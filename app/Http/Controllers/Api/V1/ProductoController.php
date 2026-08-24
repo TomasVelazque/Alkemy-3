@@ -9,6 +9,7 @@ use App\Models\Producto;
 use App\DTO\ProductoDTO;
 use App\Http\Resources\ProductoResource;
 use App\Services\ProductoService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -25,11 +26,8 @@ class ProductoController extends Controller
     }
 
     # FUNCION PARA CREAR UN PRODUCTO
-    public function store(StoreProductoRequest $request, ProductoService $productoService)
+    public function store(StoreProductoRequest $request, ProductoService $productoService):JsonResponse
     {
-        #VALIDAMOS LOS DATOS
-        $datosValidados = $request->validated();
-
         #LLAMAMOS AL SERVICE PARA CREAR EL PRODUCTO
         $producto = $productoService->create($request->toDTO());
 
@@ -38,17 +36,17 @@ class ProductoController extends Controller
     }
 
     # FUNCION PARA MOSTRAR UN PRODUCTO EN ESPECIFICO
-    public function show(Producto $producto)
+    public function show(Producto $producto):ProductoResource
     {
-        #BUSCAMOS EL PRODUCTO EN LA DB
-        $producto = Producto::with('categoria')->find($producto->id);
+        #CARGAMOS LA RELACION CON LA CATEGORIA PARA QUE SE MUESTRE
+        $producto->load('categoria');
 
-        #LO DEVOLVEMOS EN FORMATO JSON 
-        return response()->json(new ProductoResource($producto));
+        #DEVOLVEMOS EL PRODUCTO A MOSTRAR
+        return new ProductoResource($producto);
     }
 
     # FUNCION PARA ACTULIZAR UN PRODUCTO
-    public function update(UpdateProductoRequest $request, Producto $producto, ProductoService $productoService)
+    public function update(UpdateProductoRequest $request, Producto $producto, ProductoService $productoService): JsonResponse
     {
         #LLAMAMOS AL SERVICE PARA ACTUALIZAR EL PRODUCTO
         $producto = $productoService->update($producto, $request->toDTO());
@@ -58,7 +56,7 @@ class ProductoController extends Controller
     }
 
     # FUNCION PARA ELIMINAR UN PRODUCTO
-    public function destroy(Producto $producto)
+    public function destroy(Producto $producto): JsonResponse
     {
         #ELIMINAMOS EL PRODUCTO QUE NOS LLEGA
         $producto->delete();
