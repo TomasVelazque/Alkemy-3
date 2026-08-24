@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateProductoRequest;
 use App\Models\Producto;
 use App\DTO\ProductoDTO;
 use App\Http\Resources\ProductoResource;
+use App\Services\ProductoService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -24,49 +25,36 @@ class ProductoController extends Controller
     }
 
     # FUNCION PARA CREAR UN PRODUCTO
-    public function store(StoreProductoRequest $request)
+    public function store(StoreProductoRequest $request, ProductoService $productoService)
     {
         #VALIDAMOS LOS DATOS
         $datosValidados = $request->validated();
 
-        # $productoDTO = new ProductoDTO(
-        #     nombre_producto: $datosValidados['nombre_producto'],
-        #     descripcion_producto: $datosValidados['descripcion_producto'] ?? null,
-        #     precio_producto: (float) $datosValidados['precio_producto'],
-        #     stock_producto: (int) $datosValidados['stock_producto'],
-        #     categoria_id: (int) $datosValidados['categoria_id']
-        # );
-
-        $productoDTO = ProductoDTO::fromArray($datosValidados);
-
-        #CREAMOS EL PRODUCTO
-        $producto = Producto::create($productoDTO->toArray());
+        #LLAMAMOS AL SERVICE PARA CREAR EL PRODUCTO
+        $producto = $productoService->create($request->toDTO());
 
         #DEVOLVEMOS EN FORMATO JSON EL PRODUCTO CREADO
-        return response()->json($producto);
+        return response()->json(new ProductoResource($producto), 201);
     }
 
     # FUNCION PARA MOSTRAR UN PRODUCTO EN ESPECIFICO
     public function show(Producto $producto)
     {
         #BUSCAMOS EL PRODUCTO EN LA DB
-        Producto::find($producto);
+        $producto = Producto::with('categoria')->find($producto->id);
 
-        #LO DEVOLVEMOS EN FORMATO JSON
-        return response()->json($producto);
+        #LO DEVOLVEMOS EN FORMATO JSON 
+        return response()->json(new ProductoResource($producto));
     }
 
     # FUNCION PARA ACTULIZAR UN PRODUCTO
-    public function update(UpdateProductoRequest $request, Producto $producto)
+    public function update(UpdateProductoRequest $request, Producto $producto, ProductoService $productoService)
     {
-        #VALIDAMOS LA INFORMACION 
-        $datosValidados = $request->validated();
-        
-        #ACTUALIZAMOS EL PRODUCTO
-        $producto->update($datosValidados);
+        #LLAMAMOS AL SERVICE PARA ACTUALIZAR EL PRODUCTO
+        $producto = $productoService->update($producto, $request->toDTO());
 
         #RETORNAMOS EL PRODUCTO ACTUALIZADO
-        return response()->json($producto);
+        return ProductoResource::make($producto)->response()->setStatusCode(200);
     }
 
     # FUNCION PARA ELIMINAR UN PRODUCTO
@@ -76,6 +64,6 @@ class ProductoController extends Controller
         $producto->delete();
 
         #RETORNAMOS UN 200
-        return response()->json(200);
+        return response()->json(null, 200);
     }
 }

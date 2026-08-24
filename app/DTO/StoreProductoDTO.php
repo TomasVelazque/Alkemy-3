@@ -2,24 +2,21 @@
 
 namespace App\DTO;
 
-class ProductoDTO
+class StoreProductoDTO
 {
     /**
      * Create a new class instance.
      */
     public function __construct(
         public readonly string $nombre_producto,
-        public readonly ?string $descripcion_producto,
+        public readonly string $descripcion_producto,
         public readonly float $precio_producto,
         public readonly int $stock_producto,
         public readonly int $categoria_id,
     )
-    {
-        //
-    }
+    {}
 
-    public function toArray(): array
-    {
+    public function toArray(): array{
         return [
             'nombre_producto' => $this->nombre_producto,
             'descripcion_producto' => $this->descripcion_producto,
@@ -29,14 +26,13 @@ class ProductoDTO
         ];
     }
 
-    public static function fromArray(array $data): self
-    {
+    public static function fromArray(array $data): self{
         return new self(
-            nombre_producto: $data['nombre_producto'],
-            descripcion_producto: $data['descripcion_producto'] ?? null,
+            nombre_producto: $data['nombre_prodcuto'],
+            descripcion_producto: $data['descripcion_producto'],
             precio_producto: (float) $data['precio_producto'],
             stock_producto: (int) $data['stock_producto'],
-            categoria_id: (int) $data['categoria_id'],
+            categoria_id: $data['categoria_id'],
         );
     }
 }
