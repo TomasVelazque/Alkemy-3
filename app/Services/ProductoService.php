@@ -33,6 +33,9 @@ class ProductoService
         # SI HUBO CAMBIOS ACTUALIZAMOS EL PRODUCTO
         $producto->update($data->toArray());
 
+        #CARGAMOS LA RELACION CON CATEGORIA
+        $producto->load('categoria');
+
         #RETORNAMOS EL PRODUCTO ACTUALIZADO
         return $producto;
     }

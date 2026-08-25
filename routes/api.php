@@ -38,10 +38,10 @@ Route::prefix('V1')->group(function(){
 
     #---------------------------------------------------------------------------
 
-    # ---> ITEMS DEL CARRITO (Ruta Anidada) <---
+    # ---> ITEMS DEL CARRITO <---
     Route::apiResource('carritos.items', CarritoItemController::class)
         ->parameters(['items' => 'producto'])
-        ->only(['index','store', 'destroy']);
+        ->only(['index','store', 'destroy', 'update']);
 
     #---------------------------------------------------------------------------
 

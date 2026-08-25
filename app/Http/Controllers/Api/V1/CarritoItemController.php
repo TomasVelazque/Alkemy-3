@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCarritoItemRequest;
+use App\Http\Requests\UpdateCarritoItemRequest;
 use App\Models\Producto;
 use App\Models\Carrito;
 use App\Models\CarritoItem;
@@ -95,5 +96,37 @@ class CarritoItemController extends Controller
         return response()->json([
             'message' => 'Item eliminado del carrito exitosamente.'
         ], 200);
+    }
+
+    #FUNCION PARA ACTUALIZAR LA CANTIDAD DE X PRODUCTO DE NUESTRO CARRITO
+    public function update(UpdateCarritoItemRequest $request, Carrito $carrito, Producto $producto)
+    {   
+        $datosValidados = $request->validated();
+
+        $item_carrito = CarritoItem::where('carrito_id', $carrito->id)
+                                    ->where('producto_id', $producto->id)
+                                    ->first();
+
+         if(!$item_carrito){
+            return response()->json([
+                'message' => 'El producto no existe en el carrito.'
+            ], 404);
+        }
+
+        #VALIDAMOS EL STOCK
+        $producto_db = Producto::where('id', $producto->id)->first();
+
+        if($producto_db->stock_producto < $datosValidados['cantidad_producto']){
+            return response()->json([
+                'message' => 'No hay suficiente stock del producto: ' . $producto_db->nombre_producto,
+                'stock_disponible' => $producto_db->stock_producto
+            ]);
+        }
+
+        $item_carrito->update([
+            'cantidad_producto' => $datosValidados['cantidad_producto'],
+        ]);
+
+        return response()->json($item_carrito, 200);
     }
 }

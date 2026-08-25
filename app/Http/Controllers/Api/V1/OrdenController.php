@@ -12,13 +12,16 @@ use Illuminate\Http\Request;
 class OrdenController extends Controller
 {
     #METODO PARA CONFIRMAR LA ORDEN (COMPRA DEL CARRITO)
-    public function store(StoreOrdenRequest $request, Carrito $carrito){
+    public function store(StoreOrdenRequest $request){
         
         #VALIDAMOS LOS VALORES
         $datosValidados = $request->validated();
 
         #OBTENEMOS TODOS LOS ITEMS DEL CARRITO
-        $items_carrito = CarritoItem::where('carrito_id', $carrito->id)->get();
+        $items_carrito = CarritoItem::where('carrito_id', $datosValidados['carrito_id'])->get();
+
+        #OBTENEMOS EL CARRITO
+        $carrito = Carrito::where('id', $datosValidados['carrito_id'])->first();
 
         #VALIDAMOS QUE EL CARRITO NO HAYA SIDO CONFIRMADO ANTES
         if($carrito->estado == 'Confirmado'){

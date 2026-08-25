@@ -1,0 +1,459 @@
+{
+  "info": {
+    "_postman_id": "ff0a986a-7105-4b2c-bd3e-a70508da29fc",
+    "name": "ALKEMY",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "57167206",
+    "_collection_link": "https://go.postman.co/collection/57167206-ff0a986a-7105-4b2c-bd3e-a70508da29fc?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Productos",
+      "item": [
+        {
+          "name": "Listar todos los productos",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre_producto\": \"Producto de Postaman\",\r\n    \"descripcion_producto\": \"Este es el mejor Producto\"\r\n    \"precio\": -100,\r\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/productos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar un solo producto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear un producto",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre_producto\": \"Producto De Postaman 2.5\",\r\n    \"descripcion_producto\": \"Otro producto mas..\",\r\n    \"precio_producto\": 18,\r\n    \"stock_producto\": 12,\r\n    \"categoria_id\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/productos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar un producto",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"precio_producto\": 4550,\r\n    \"descripcion_producto\": \"Es vida.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/productos/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar un producto",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos/5",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categorias",
+      "item": [
+        {
+          "name": "Listar todas las categorias",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm\r\n\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response is a JSON array\", function () {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.be.an(\"array\");\r\n});\r\n\r\npm.test(\"Array is not empty\", function () {\r\n    const json = pm.response.json();\r\n    pm.expect(json.length).to.be.greaterThan(0);\r\n});\r\n\r\npm.test(\"Each category has required fields\", function () {\r\n    const json = pm.response.json();\r\n    json.forEach(function (category) {\r\n        pm.expect(category).to.have.property(\"id\");\r\n        pm.expect(category).to.have.property(\"nombre_categoria\");\r\n        pm.expect(category).to.have.property(\"descripcion_categoria\");\r\n        pm.expect(category).to.have.property(\"created_at\");\r\n        pm.expect(category).to.have.property(\"updated_at\");\r\n    });\r\n});\r\n\r\npm.test(\"Category id is a number\", function () {\r\n    const json = pm.response.json();\r\n    json.forEach(function (category) {\r\n        pm.expect(category.id).to.be.a(\"number\");\r\n    });\r\n});\r\n\r\npm.test(\"Category nombre_categoria is a non-empty string\", function () {\r\n    const json = pm.response.json();\r\n    json.forEach(function (category) {\r\n        pm.expect(category.nombre_categoria).to.be.a(\"string\").and.not.empty;\r\n    });\r\n});\r\n\r\npm.test(\"Response time is less than 2000ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.below(2000);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categorias",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar una sola categoria",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categorias/4",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear una categoria",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre_categoria\": \"Categoria Descartable\",\r\n    \"descripcion_categoria\": \"Categoria con el fin de eliminarse.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/categorias",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar una categoria",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre_categoria\": \"Categoria para pruebas de Postman 1.0\",\r\n    \"descripcion_categoria\": \"Categoria para productos de Postman 1.0\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/categorias/4",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar una categoria",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/categorias/5",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Carritos",
+      "item": [
+        {
+          "name": "Crear un carrito",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"user_id\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/carritos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "carritos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar un producto al carrito",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"producto_id\": 2,\r\n    \"cantidad_producto\": 4\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/carritos/1/items",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "carritos",
+                "1",
+                "items"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar un producto del carrito",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/carritos/1/items/3",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "carritos",
+                "1",
+                "items",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Vaciar carrito",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/carritos/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "carritos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar cantidad de un producto del carrito",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"cantidad_producto\": 10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/carritos/1/items/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "carritos",
+                "1",
+                "items",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ordenes",
+      "item": [
+        {
+          "name": "Confirmar Orden",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"carrito_id\": 1,\r\n    \"direccion_envio\": \"Calle 6\",\r\n    \"metodo_pago\": \"Tarjeta de credito\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/ordenes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ordenes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver items de un carrito",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/carritos/1/items",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "carritos",
+                "1",
+                "items"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver resumen de una orden",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ordenes/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ordenes",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

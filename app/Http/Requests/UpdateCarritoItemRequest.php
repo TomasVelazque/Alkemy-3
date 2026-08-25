@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreOrdenRequest extends FormRequest
+class UpdateCarritoItemRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,7 @@ class StoreOrdenRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'carrito_id' => 'required|exists:carritos,id',
-            'direccion_envio' => 'required|string|max:255',
-            'metodo_pago' => 'required|string|max:255'
+            'cantidad_producto' => 'required|integer|min:1',
         ];
     }
 }
