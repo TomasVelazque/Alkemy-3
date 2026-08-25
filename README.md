@@ -6,8 +6,8 @@ Este proyecto reflejara las acciones que se pueden realizar sobre los diferentes
 
 ### RUTAS/ENDPOINTS DE PRODUCTOS.
 
-| Método | Ruta / Endpoint | Descripción
-| -------------------------------------|
+| Método | Ruta / Endpoint | Descripción |
+| :--- | :--- | :--- |
 | `GET` | `/api/V1/productos` | Obtiene el listado completo de todos los productos y sus detalles |
 | `GET` | `/api/V1/productos/{id}` | Obtiene el detalle de un producto específico |
 | `POST` | `/api/V1/productos` | Crea un nuevo producto |
@@ -37,8 +37,8 @@ Los valores mostrados que se pueden usar son ejemplos.
 
 ### RUTAS/ENDPOINTS DE CATEGORIAS.
 
-| Método | Ruta / Endpoint | Descripción
-| -------------------------------------|
+| Método | Ruta / Endpoint | Descripción |
+| :--- | :--- | :--- |
 | `GET` | `/api/V1/categorias` | Obtiene el listado completo de todas las categorias y sus detalles |
 | `GET` | `/api/V1/categorias/{id}` | Obtiene el detalle de una categoria específica |
 | `POST` | `/api/V1/categorias` | Crea un nuevo categoria |
@@ -63,8 +63,8 @@ Los valores mostrados que se pueden usar son ejemplos.
 
 ### RUTAS/ENDPOINTS DE CARRITOS.
 
-| Método | Ruta / Endpoint | Descripción
-| -------------------------------------|
+| Método | Ruta / Endpoint | Descripción | 
+| :--- | :--- | :--- |
 | `POST` | `/api/V1/carritos` | Crea un nuevo carrito |
 | `DELETE` | `/api/V1/carritos/{id_carrito}`| Vacia todo el carrito |
 | `GET` | `/api/V1/carritos/{id_carrito}/items`| Ver items de un carrito |
@@ -95,8 +95,8 @@ Los valores mostrados que se pueden usar son ejemplos.
 
 ### RUTAS/ENDPOINTS
 
-| Método | Ruta / Endpoint | Descripción
-| -------------------------------------|
+| Método | Ruta / Endpoint | Descripción |
+| :--- | :--- | :--- |
 | `GET` | `/api/V1/ordenes/{id}` | Ver resumen de una orden con todos sus detalles |
 | `POST` | `/api/V1/carritos/`| Confirmar una orden |
 
