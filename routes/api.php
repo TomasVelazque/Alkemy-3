@@ -48,6 +48,6 @@ Route::prefix('V1')->group(function(){
     #---> ORDENES DE COMPRA<---
 
     #RUTAS MEDIANTE API RESOURCE PARA ORDENES DE COMPRA
-    Route::apiResource('/ordenes', OrdenController::class);
+    Route::apiResource('/ordenes', OrdenController::class)->parameters(['ordenes' => 'orden']);
 
 });
