@@ -29,6 +29,12 @@ class CarritoController extends Controller
     #FUNCION PARA VACIAR EL CARRITO
     public function destroy(Carrito $carrito){
 
+           if($carrito->user_id !== auth('api')->id()){
+            return response()->json([
+                'message' => 'El id no pertence al arrito actual'
+            ], 403);
+        }
+
         #VALIDAMOS SI EL CARRITO EXISTE
         $existe_carrito = Carrito::findOrFail($carrito->id);
         if(!$existe_carrito){

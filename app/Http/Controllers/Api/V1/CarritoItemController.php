@@ -35,6 +35,12 @@ class CarritoItemController extends Controller
     #FUNCION PARA AGREGAR UN ITEM AL CARRITO
     public function store(StoreCarritoItemRequest $request, Carrito $carrito){
 
+        if($carrito->user_id !== auth('api')->id()){
+            return response()->json([
+                'message' => 'El item no pertenece al carrito actual'
+            ], 403);
+        }
+
         #VALIDAMOS LOS DATOS ENVIADOS MEDIANTE EL REQUEST
         $infoValidada = $request->validated();
 
@@ -78,6 +84,12 @@ class CarritoItemController extends Controller
     #FUNCION PARA ELIMINAR UN ITEM DEL CARRITO
     public function destroy(Carrito $carrito, Producto $producto){
 
+        if($carrito->user_id !== auth('api')->id()){
+            return response()->json([
+                'message' => 'El item no pertenece al carrito actual'
+            ], 403);
+        } 
+     
         #VALIDAMOS QUE EL PRODUCTO EXISTA EN EL CARRITO
         $item_carrito = CarritoItem::where('carrito_id', $carrito->id)
                                     ->where('producto_id', $producto->id)
@@ -102,6 +114,12 @@ class CarritoItemController extends Controller
     public function update(UpdateCarritoItemRequest $request, Carrito $carrito, Producto $producto)
     {   
         $datosValidados = $request->validated();
+
+        if($carrito->user_id !== auth('api')->id()){
+            return response()->json([
+                'message' => 'El item no pertenece al carrito actual'
+            ], 403);
+        }
 
         $item_carrito = CarritoItem::where('carrito_id', $carrito->id)
                                     ->where('producto_id', $producto->id)
