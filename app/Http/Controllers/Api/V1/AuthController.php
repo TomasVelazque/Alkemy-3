@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -33,8 +34,9 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed'
         ]);
 
-        $user = User::create($validated);
+        $validated['password'] = Hash::make($validated['password']);
 
+        $user = User::create($validated);
         $token = auth('api')->login($user);
 
         return response()->json([
