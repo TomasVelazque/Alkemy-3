@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTO\StoreOrdenDTO;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,5 +28,14 @@ class StoreOrdenRequest extends FormRequest
             'direccion_envio' => 'required|string|max:255',
             'metodo_pago' => 'required|string|max:255'
         ];
+    }
+
+    public function toDTO(): StoreOrdenDTO 
+    {
+        return new StoreOrdenDTO(
+            carrito_id: (int) $this->input('carrito_id'),
+            direccion_envio: (string) $this->input('direccion_envio'),
+            metodo_pago: (string) $this->input('metodo_pago'),
+        );
     }
 }
