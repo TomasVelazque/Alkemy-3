@@ -49,8 +49,8 @@ class OrdenController extends Controller
 
         #VALIDAMOS QUE EL PRECIO DEL CARRITO NO HAYA CAMBIADO DESDE QUE SE AGREGO EL ITEM AL CARRITO
         foreach($items_carrito as $item){
-            if($item->producto->precio_producto != $item->precio_producto){
-                $item->precio_producto = $item->producto->precio_producto;
+            if($item->producto->precio_producto != $item->precio_unitario){
+                $item->precio_unitario = $item->producto->precio_producto;
                 $item->save();
                 return response()->json([
                     'message' => 'El precio del producto: ' . $item->producto->nombre_producto . 'cambio desde que se agrego al carrito. Por favor, revise su carrito antes de confirmar la orden.',

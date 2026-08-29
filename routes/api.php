@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CarritoController;
 use App\Http\Controllers\Api\V1\CategoriaController;
 use App\Http\Controllers\Api\V1\ProductoController;
@@ -20,26 +21,27 @@ Route::prefix('V1')->group(function(){
     # ---> PRODUCTOS <---
 
     #RUTA MEDIANTE API RESOURCE PARA PRODUCTOS
-    Route::apiResource('/productos', ProductoController::class);
+    Route::apiResource('/productos', ProductoController::class)->middleware(['throttle:10,1', 'auth:api', 'admin']);
 
     #---------------------------------------------------------------------------
 
     # ---> CATEGORIAS <--
     
     #RUTA MEDIANTE API RESOURCE PARA CATEGORIAS
-    Route::apiResource('/categorias', CategoriaController::class);
+    Route::apiResource('/categorias', CategoriaController::class)->middleware(['throttle:10,1', 'auth:api', 'admin']);
 
     #---------------------------------------------------------------------------
 
     # ---> CARRITO <--
 
     #RUTAS MEDIANTE API RESOURSE PARA CARRITO
-    Route::apiResource('/carritos', CarritoController::class);
+    Route::apiResource('/carritos', CarritoController::class)->middleware(['auth:api']);
 
     #---------------------------------------------------------------------------
 
     # ---> ITEMS DEL CARRITO <---
     Route::apiResource('carritos.items', CarritoItemController::class)
+        ->middleware(['auth:api'])
         ->parameters(['items' => 'producto'])
         ->only(['index','store', 'destroy', 'update']);
 
@@ -48,6 +50,14 @@ Route::prefix('V1')->group(function(){
     #---> ORDENES DE COMPRA<---
 
     #RUTAS MEDIANTE API RESOURCE PARA ORDENES DE COMPRA
-    Route::apiResource('/ordenes', OrdenController::class);
+    Route::apiResource('/ordenes', OrdenController::class)->middleware(['auth:api']);
+
+    #---------------------------------------------------------------------------
+    
+    #---> AUTH <---
+
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/profile', [AuthController::class, 'profile'])->middleware('auth:api');
+    Route::post('/register', [AuthController::class, 'register']);
 
 });

@@ -14,11 +14,13 @@ class CarritoController extends Controller
     # FUNCION PARA CREAR UN CARRITO
     public function store(StoreCarritoRequest $request){
         
-        #VALIDAMOS LA INFORMACION MEDIANTE LA REQUEST
-        $datosValidados = $request->validated();
+        #BUSCAMOS EL ID DEL USUARIO LOGEADO
+        $user = auth('api')->id();
 
         #CREAMOS EL CARRITO
-        $carrito = Carrito::create($datosValidados);
+        $carrito = Carrito::create([
+            'user_id' => $user,
+        ]);
 
         #DEVOLVEMOS LA RESPUESTA EN FORMATO JSON y UN 201
         return response()->json($carrito, 201);

@@ -21,7 +21,8 @@ class StoreCarritoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
+            #COMO AHORA USAMOS AUTHORIZATION NO LO NECESITAREMOS
+            # 'user_id' => 'required|exists:users,id', 
         ];
     }
 }
