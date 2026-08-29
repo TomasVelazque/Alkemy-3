@@ -60,11 +60,21 @@
         {
           "name": "Crear un producto",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"nombre_producto\": \"Producto De Postaman 2.5\",\r\n    \"descripcion_producto\": \"Otro producto mas..\",\r\n    \"precio_producto\": 18,\r\n    \"stock_producto\": 12,\r\n    \"categoria_id\": 1\r\n}",
+              "raw": "{\r\n    \"nombre_producto\": \"Producto De Postaman 4.0\",\r\n    \"descripcion_producto\": \"Otro producto mas..\",\r\n    \"precio_producto\": 2000,\r\n    \"stock_producto\": 900,\r\n    \"categoria_id\": 1\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -267,11 +277,21 @@
         {
           "name": "Crear un carrito",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"user_id\": 1\r\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -293,11 +313,21 @@
         {
           "name": "Agregar un producto al carrito",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"producto_id\": 2,\r\n    \"cantidad_producto\": 4\r\n}",
+              "raw": "{\r\n    \"producto_id\": 2,\r\n    \"cantidad_producto\": 5\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -321,10 +351,20 @@
         {
           "name": "Eliminar un producto del carrito",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/carritos/1/items/3",
+              "raw": "{{base_url}}/carritos/1/items/2",
               "host": [
                 "{{base_url}}"
               ],
@@ -332,7 +372,7 @@
                 "carritos",
                 "1",
                 "items",
-                "3"
+                "2"
               ]
             }
           },
@@ -341,6 +381,16 @@
         {
           "name": "Vaciar carrito",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [],
             "url": {
@@ -359,11 +409,21 @@
         {
           "name": "Actualizar cantidad de un producto del carrito",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"cantidad_producto\": 10\r\n}",
+              "raw": "{\r\n    \"cantidad_producto\": 1\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -391,13 +451,42 @@
       "name": "Ordenes",
       "item": [
         {
+          "name": "Ver items de un carrito",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/carritos/1/items",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "carritos",
+                "1",
+                "items"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Confirmar Orden",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"carrito_id\": 1,\r\n    \"direccion_envio\": \"Calle 6\",\r\n    \"metodo_pago\": \"Tarjeta de credito\"\r\n}",
+              "raw": "{\r\n    \"carrito_id\": 1,\r\n    \"direccion_envio\": \"Calle 15\",\r\n    \"metodo_pago\": \"Tranferencia\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -417,37 +506,123 @@
           "response": []
         },
         {
-          "name": "Ver items de un carrito",
+          "name": "Ver resumen de una orden",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/carritos/1/items",
+              "raw": "{{base_url}}/ordenes/2",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
-                "carritos",
-                "1",
-                "items"
+                "ordenes",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.environment.set(\r\n    \"token\",\r\n    response.access_token\r\n);\r\n\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"tomasvelazquelp@gmail.com\",\r\n    \"password\": \"1234\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login"
               ]
             }
           },
           "response": []
         },
         {
-          "name": "Ver resumen de una orden",
+          "name": "Ver profile",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/ordenes/1",
+              "raw": "{{base_url}}/profile",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
-                "ordenes",
-                "1"
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"TestUser3\",\r\n    \"email\": \"testuser3@gmail.com\",\r\n    \"password\": \"password\",\r\n    \"password_confirmation\": \"password\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "register"
               ]
             }
           },
