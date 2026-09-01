@@ -2,6 +2,58 @@
 
 Este proyecto reflejara las acciones que se pueden realizar sobre los diferentes recursos de una tienda.
 
+
+## EJECUCION DEL PROYECTO 📑
+
+- Posicionate en la carpeta de "htdocs" de Xampp. 
+- Clona el repositorio mediante el siguiente comando el la terminal:
+```shell
+git clone https://github.com/TomasVelazque/Alkemy-3 .
+```
+- Copia el archivo de entorno .env.example a .env y configura los datos de tu base de datos:
+```shell
+cp .env.example .env
+```
+- Instala las dependencias de Composer:
+```shell
+composer install
+```
+- Genera la clave de la aplicación:
+```shell
+php artisan key:generate
+```
+- Ejecuta las migraciones y seeders:
+```shell
+php artisan migrate --seed
+```
+- Corre el servidor mediante (recuerda estar en la carpeta del proyecto): 
+```shell
+php artisan serve
+```
+
+¡Comienza a utilizar Postman para conocer y probar el flujo del programa!
+
+## REQUERIMIENTOS 🛠️
+
+Los requerimientos son los siguientes:
+
+Composer version 2.10.1.
+Laravel Installer version 5.31.0.
+PHP version 8.4.24.
+Postman (para envio de solicitudes para el testeo).
+
+Para ver tus versiones:
+```shell
+php -v
+```
+```shell
+composer -v
+```
+```shell
+laravel -v
+```
+
+
 ## 🗺️RUTAS DE LA API:
 
 ### RUTAS/ENDPOINTS DE PRODUCTOS.
@@ -93,7 +145,7 @@ En el metodo PUT para actualizar la cantidad de un producto en un carrito se deb
 
 Los valores mostrados que se pueden usar son ejemplos.
 
-### RUTAS/ENDPOINTS
+### RUTAS/ENDPOINTS DE LAS ORDENES
 
 | Método | Ruta / Endpoint | Descripción |
 | :--- | :--- | :--- |
@@ -109,55 +161,15 @@ En el metodo POST para confirmar la orden de x carrito se deben enviar los sigui
 
 Los valores mostrados que se pueden usar son ejemplos.
 
-## REQUERIMIENTOS 🛠️
 
-Los requerimientos son los siguientes:
+### RUTAS/ENDPOINTS DEL AUTH
 
-Composer version 2.10.1.
-Laravel Installer version 5.31.0.
-PHP version 8.4.24.
-Postman (para envio de solicitudes para el testeo).
 
-Para ver tus versiones:
-```shell
-php -v
-```
-```shell
-composer -v
-```
-```shell
-laravel -v
-```
-
-## EJECUCION DEL PROYECTO 📑
-
-- Posicionate en la carpeta de "htdocs" de Xampp. 
-- Clona el repositorio mediante el siguiente comando el la terminal:
-```shell
-git clone https://github.com/TomasVelazque/Alkemy-3 .
-```
-- Copia el archivo de entorno .env.example a .env y configura los datos de tu base de datos:
-```shell
-cp .env.example .env
-```
-- Instala las dependencias de Composer:
-```shell
-composer install
-```
-- Genera la clave de la aplicación:
-```shell
-php artisan key:generate
-```
-- Ejecuta las migraciones y seeders:
-```shell
-php artisan migrate --seed
-```
-- Corre el servidor mediante (recuerda estar en la carpeta del proyecto): 
-```shell
-php artisan serve
-```
-
-¡Comienza a utilizar Postman para conocer y probar el flujo del programa!
+| Método | Ruta / Endpoint | Descripción |
+| :--- | :--- | :--- |
+| `GET` | `/api/V1/profile` | Ver la info del usuario que inicio session en el login. |
+| `POST` | `/api/V1/login`| Iniciar Session y obtener tu access token. |
+| `POST` | `/api/V1/register`| Crear un usuario. |
 
 
 
