@@ -18,6 +18,13 @@ class AuthController extends Controller
 
         $token = auth('api')->attempt($credenciales);
 
+        # VALIDACIONES POR SI LAS CREDENCIALES NO SON CORRECTAS
+        if(!$token){
+            return response()->json([
+                'error' => 'Credenciales Incorrectas' 
+            ], 401);
+        }
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
