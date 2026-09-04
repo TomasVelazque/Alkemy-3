@@ -5,10 +5,42 @@ namespace App\Services;
 use App\DTO\StoreOrdenDTO;
 use App\Models\Carrito;
 use App\Models\Orden;
+use Illuminate\JsonSchema\Types\ObjectType;
 use InvalidArgumentException;
 
 class OrdenService
 {
+
+    #FUNCION PARA CALCULAR TOTALES
+    public function calcularTotales(object $carrito): array
+    {
+        #INICIALIZAMOS VARIABLES
+        $subtotal = 0;
+
+        #RECORREMOS LOS ITEMS DEL CARRITO PARA CALCULAR EL SUBTOTAL
+        foreach($carrito->carrito_items as $item){
+            $subtotal += $item->precio_unitario * $item->cantidad_producto;
+        }
+
+        #CALCULAMOS IMPUESTOS, COSTO DE ENVIO Y TOTAL
+        $impuestos = $subtotal * 0.21;
+        $costo_envio = 1500;
+
+        if($subtotal >= 10000){
+            $costo_envio = 0;
+        }
+
+        $total = $subtotal + $impuestos + $costo_envio; 
+
+        return [
+            'subtotal' => $subtotal,
+            'impuestos' => $impuestos,
+            'costo_envio' => $costo_envio,
+            'total' => $total,
+        ];
+    }
+
+
     #FUNCION PARA CREAR UNA ORDEN
     public function create(StoreOrdenDTO $data): Orden 
     {
@@ -43,23 +75,16 @@ class OrdenService
             $item->producto->save();
         }
 
-        #CALCULAMOS EL SUBTOTAL, IMPUESTOS, COSTO DE ENVIO Y TOTAL DE LA ORDEN
-        $subtotal = 0;
-        foreach($carrito->carrito_items as $item){
-            $subtotal += $item->producto->precio_producto * $item->cantidad_producto;
-        }
-
-        $impuestos = $subtotal * 0.21;
-        $costo_envio = 1500;
-        $total = $subtotal + $impuestos + $costo_envio;
+        #CALCULAMOS LOS TOTALES
+        $totales = $this->calcularTotales($carrito);
 
         #CREAMOS LA ORDEN EN LA BASE DE DATOS
         $orden = Orden::create([
             'carrito_id' => $carrito->id,
-            'subtotal' => $subtotal,
-            'impuestos' => $impuestos,
-            'total' => $total,
-            'costo_envio' => $costo_envio, 
+            'subtotal' => $totales['subtotal'],
+            'impuestos' => $totales['impuestos'],
+            'total' => $totales['total'],
+            'costo_envio' => $totales['costo_envio'], 
             'direccion_envio' => $data->direccion_envio,
             'metodo_pago' => $data->metodo_pago,
             'confirmada' => true
