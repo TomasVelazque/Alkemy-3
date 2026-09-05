@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Producto extends Model
 {
+    
+
     // TABLA A LA QUE HACEMOS REFERENCIA
     protected $table = 'productos';
 
