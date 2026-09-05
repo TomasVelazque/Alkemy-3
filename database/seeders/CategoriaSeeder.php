@@ -13,17 +13,17 @@ class CategoriaSeeder extends Seeder
      */
     public function run(): void
     {
-        Categoria::create([
+        Categoria::factory()->create([
             'nombre_categoria' => 'Bebidas',
             'descripcion_categoria' => 'Categoria para las bebidas.'
         ]);
         
-        Categoria::create([
+        Categoria::factory()->create([
             'nombre_categoria' => 'Frutas y Verduras',
             'descripcion_categoria' => 'Categoria para todo tipo de frutas y verduras.'
         ]);
 
-        Categoria::Create([
+        Categoria::factory()->create([
             'nombre_categoria' => 'Pastas',
             'descripcion_categoria' => 'Categoria para todo tipo de pastas.'
         ]);

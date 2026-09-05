@@ -21,7 +21,9 @@ Route::prefix('V1')->group(function(){
     # ---> PRODUCTOS <---
 
     #RUTA MEDIANTE API RESOURCE PARA PRODUCTOS
-    Route::apiResource('/productos', ProductoController::class)->middleware(['throttle:10,1', 'auth:api', 'admin']);
+    Route::middleware('throttle:10,1')->group(function () {
+        Route::apiResource('/productos', ProductoController::class)->middlewareFor(['store', 'update', 'destroy'],  ['auth:api', 'admin']);
+    });
 
     #---------------------------------------------------------------------------
 
