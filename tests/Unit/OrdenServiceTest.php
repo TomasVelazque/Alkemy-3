@@ -48,7 +48,7 @@ class OrdenServiceTest extends TestCase
     }
 
     # FUNCION PARA COMPROBAR SI EL ENVIO ES GRATIS CUANDO EL CASO LIMITE DE 10000
-    public function test_calcular_totales_envio_gratis_desde_monto_limite()
+    public function test_calcular_totales_envio_gratis_desde_monto_limite_superior()
     {
         # ARRANGE: GENERAR UN CARRITO DE 10000
         $carrito = $this->data(1000, 10);
@@ -60,6 +60,21 @@ class OrdenServiceTest extends TestCase
         # ASSERT: VERIFICAMOS QUE EL COSTO DE ENVIO SEA 0 Y SU TOTAL SEA 12100
         $this->assertEquals(0.0, $totales['costo_envio']);
         $this->assertEquals(12100.0, $totales['total']);
+    }
+
+    #FUNCION PARA COMPROBAR SI SE COBRA EL ENVIO CUANDO EL CASO LIMITE ES 1
+    public function test_calcular_totales_cobro_envio_desde_monto_limite_inferior()
+    {
+        # ARRANGE: GENERAMOS UN CARRITO DE 1
+        $carrito = $this->data(1,1);
+        $ordenService = new OrdenService();
+
+        # ACT: EJECUTAMOS LA FUNCION DEL CALCULO
+        $totales = $ordenService->calcularTotales($carrito);
+
+        # ASSERT: VERIFICAMOS QUE EL COSTO DE ENVIO SEA 1500 Y SU TOTAL 1501.21
+        $this->assertEquals(1500.0, $totales['costo_envio']);
+        $this->assertEquals(1501.21, $totales['total']);
     }
 
     # FUNCION PARA COMPROBAR SUMA DE TOTALES CON VARIOS ITEMS ANTES DE CALULAR IMPUESTOS
