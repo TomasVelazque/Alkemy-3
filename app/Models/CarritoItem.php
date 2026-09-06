@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class CarritoItem extends Model
 {
+    use HasFactory;
+
     # TABLA A LA QUE LE HACEMOS REFERENCIA
     protected $table = "carrito_items";
 

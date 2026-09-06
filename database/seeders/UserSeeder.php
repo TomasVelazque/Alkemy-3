@@ -17,12 +17,14 @@ class UserSeeder extends Seeder
         User::factory()->create([
             'name' => 'Limit',
             'email' => 'tomasvelazquelp@gmail.com',
+            'password' => Hash::make('1234'),
             'is_admin' => true,
         ]);
 
         User::factory()->create([
             'name' => 'TestUser',
             'email' => 'testuser@gmail.com',
+            'password' => Hash::make('1234'),
             'is_admin' => false,
         ]);
     }

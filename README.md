@@ -1,73 +1,155 @@
-# PROYECTO: TIENDA ALKEMY 🛒
+# 🛒 Tienda Alkemy
 
-Este proyecto reflejara las acciones que se pueden realizar sobre los diferentes recursos de una tienda.
+API REST desarrollada en Laravel para gestionar una tienda de productos, con carritos de compra, órdenes y autenticación mediante JWT.
 
+---
 
-## EJECUCION DEL PROYECTO 📑
+## 📋 Tabla de contenidos
 
-- Posicionate en la carpeta de "htdocs" de Xampp. 
-- Clona el repositorio mediante el siguiente comando el la terminal:
+- [Requerimientos](#-requerimientos)
+- [Instalación](#-instalación)
+- [Arquitectura](#-arquitectura)
+- [Seguridad](#-seguridad)
+- [Uso de la API](#-uso-de-la-api)
+  - [Autenticación](#autenticación)
+  - [Productos](#productos)
+  - [Categorías](#categorías)
+  - [Carritos](#carritos)
+  - [Items del carrito](#items-del-carrito)
+  - [Órdenes](#órdenes)
+- [Testing](#-testing)
+
+---
+
+## 🛠️ Requerimientos
+
+| Herramienta | Versión |
+| :--- | :--- |
+| PHP | 8.4.24 |
+| Composer | 2.10.1 |
+| Laravel Installer | 5.31.0 |
+| Postman | (para probar el flujo de la API) |
+
+Para verificar tus versiones instaladas:
+
+```shell
+php -v
+composer -v
+laravel -v
+```
+
+---
+
+## 🚀 Instalación
+
+1. Posicionate en la carpeta `htdocs` de XAMPP.
+
+2. Cloná el repositorio:
+
 ```shell
 git clone https://github.com/TomasVelazque/Alkemy-3 .
 ```
-- Copia el archivo de entorno .env.example a .env y configura los datos de tu base de datos:
+
+3. Copiá el archivo de entorno y configurá tu base de datos:
+
 ```shell
 cp .env.example .env
 ```
-- Instala las dependencias de Composer:
+
+4. Instalá las dependencias de Composer:
+
 ```shell
 composer install
 ```
-- Genera la clave de la aplicación:
+
+5. Generá la clave de la aplicación:
+
 ```shell
 php artisan key:generate
 ```
-- Ejecuta las migraciones y seeders:
+
+6. Generá la clave secreta de JWT (necesaria para la autenticación):
+
+```shell
+php artisan jwt:secret
+```
+
+7. Ejecutá las migraciones y los seeders:
+
 ```shell
 php artisan migrate --seed
 ```
-- Corre el servidor mediante (recuerda estar en la carpeta del proyecto): 
+
+8. Levantá el servidor:
+
 ```shell
 php artisan serve
 ```
 
-¡Comienza a utilizar Postman para conocer y probar el flujo del programa!
+9. Importá la colección de Postman para probar los endpoints y conocer el flujo completo del sistema.
 
-## REQUERIMIENTOS 🛠️
+---
 
-Los requerimientos son los siguientes:
+## 🏗️ Arquitectura
 
-Composer version 2.10.1.
-Laravel Installer version 5.31.0.
-PHP version 8.4.24.
-Postman (para envio de solicitudes para el testeo).
+El proyecto sigue una organización en capas dentro de una API REST de Laravel, pensada para mantener los controladores livianos y la lógica de negocio testeable de forma aislada.
 
-Para ver tus versiones:
-```shell
-php -v
 ```
-```shell
-composer -v
-```
-```shell
-laravel -v
+app/
+├── Http/
+│   ├── Controllers/Api/V1/   → Controladores de cada recurso (Producto, Categoria, Carrito, CarritoItem, Orden, Auth)
+│   ├── Requests/              → Form Requests: validación de datos de entrada
+│   └── Resources/             → API Resources: dan forma a las respuestas JSON
+├── Services/                   → Lógica de negocio (ej. ProductoService)
+├── DTO/                         → Data Transfer Objects (StoreProductoDTO, UpdateProductoDTO, etc.)
+└── Models/                     → Modelos Eloquent (Producto, Categoria, Carrito, CarritoItem, Orden, User)
 ```
 
+**Capas principales:**
 
-## 🗺️RUTAS DE LA API:
+- **Controladores**: reciben la request, delegan la validación al Form Request correspondiente y coordinan la respuesta. Todas las rutas están agrupadas bajo el prefijo `/api/V1`.
+- **Services**: concentran la lógica de negocio que no pertenece al controlador (por ejemplo, la creación y actualización de productos), lo que permite testearla de forma aislada mediante mocks.
+- **DTOs**: encapsulan y tipan los datos que viajan entre el controlador y el Service, evitando pasar arrays sueltos.
+- **Resources**: transforman los modelos Eloquent al formato JSON final expuesto por la API, incluyendo el renombrado de campos y el formateo de fechas.
+- **Modelos**: representan las tablas de la base de datos y sus relaciones (`Carrito` → `CarritoItem` → `Producto` → `Categoria`).
 
-### RUTAS/ENDPOINTS DE PRODUCTOS.
+---
 
-| Método | Ruta / Endpoint | Descripción |
-| :--- | :--- | :--- |
-| `GET` | `/api/V1/productos` | Obtiene el listado completo de todos los productos y sus detalles |
-| `GET` | `/api/V1/productos/{id}` | Obtiene el detalle de un producto específico |
-| `POST` | `/api/V1/productos` | Crea un nuevo producto |
-| `PUT` | `/api/V1/productos/{id}` | Actualiza un producto existente |
-| `DELETE` | `/api/V1/productos/{id}` | Elimina un producto |
+## 🔒 Seguridad
 
-En el metodo POST para crear un nuevo producto se deben de enviar los siguientes valores:
+- **Autenticación:** basada en JWT sobre el guard `api`. Cada usuario recibe un access token al iniciar sesión, que debe enviarse en el header `Authorization: Bearer {token}` en cada request protegida.
+- **Autorización por rol:** las rutas de creación, actualización y eliminación de **productos** y **categorías** están protegidas por un middleware `admin`, que solo permite el acceso a usuarios con permisos administrativos.
+- **Propiedad de recursos:** en carritos e items del carrito se valida explícitamente que el recurso solicitado pertenezca al usuario autenticado, devolviendo `403 Forbidden` en caso contrario.
+- **Rate limiting:** el listado y alta de productos está limitado mediante `throttle:10,1` (10 solicitudes por minuto) para mitigar abuso.
+- **Validación de datos:** toda entrada pasa por un Form Request dedicado antes de llegar a la lógica de negocio.
 
+---
+
+## 📡 Uso de la API
+
+Todas las rutas están prefijadas con `/api/V1`.
+
+### Autenticación
+
+| Método | Endpoint | Descripción | Auth |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/login` | Inicia sesión y devuelve el access token | No |
+| `POST` | `/register` | Registra un nuevo usuario | No |
+| `GET` | `/profile` | Devuelve los datos del usuario autenticado | Sí |
+
+### Productos
+
+| Método | Endpoint | Descripción | Auth |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/productos` | Lista todos los productos | No |
+| `GET` | `/productos/{id}` | Detalle de un producto | No |
+| `POST` | `/productos` | Crea un producto | Sí (admin) |
+| `PUT` | `/productos/{id}` | Actualiza un producto | Sí (admin) |
+| `DELETE` | `/productos/{id}` | Elimina un producto | Sí (admin) |
+
+**Body para `POST /productos`:**
+
+```json
 {
     "nombre_producto": "Postaman Coca Cola",
     "descripcion_producto": "Una coca cola de Postman",
@@ -75,8 +157,11 @@ En el metodo POST para crear un nuevo producto se deben de enviar los siguientes
     "stock_producto": 12,
     "categoria_id": 1
 }
+```
 
-En el metodo PUT para actualizar un producto se deben enviar al menos uno de los siguientes valores: 
+**Body para `PUT /productos/{id}`** (al menos uno de los campos):
+
+```json
 {
     "nombre_producto": "Postaman Coca Cola",
     "descripcion_producto": "Una coca cola de Postman",
@@ -84,92 +169,112 @@ En el metodo PUT para actualizar un producto se deben enviar al menos uno de los
     "stock_producto": 12,
     "categoria_id": 1
 }
+```
 
-Los valores mostrados que se pueden usar son ejemplos.
+### Categorías
 
-### RUTAS/ENDPOINTS DE CATEGORIAS.
+| Método | Endpoint | Descripción | Auth |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/categorias` | Lista todas las categorías | Sí (admin) |
+| `GET` | `/categorias/{id}` | Detalle de una categoría | Sí (admin) |
+| `POST` | `/categorias` | Crea una categoría | Sí (admin) |
+| `PUT` | `/categorias/{id}` | Actualiza una categoría | Sí (admin) |
+| `DELETE` | `/categorias/{id}` | Elimina una categoría | Sí (admin) |
 
-| Método | Ruta / Endpoint | Descripción |
-| :--- | :--- | :--- |
-| `GET` | `/api/V1/categorias` | Obtiene el listado completo de todas las categorias y sus detalles |
-| `GET` | `/api/V1/categorias/{id}` | Obtiene el detalle de una categoria específica |
-| `POST` | `/api/V1/categorias` | Crea un nuevo categoria |
-| `PUT` | `/api/V1/categorias/{id}` | Actualiza una categoria existente |
-| `DELETE` | `/api/V1/categorias/{id}` | Elimina una categoria |
+**Body para `POST /categorias`:**
 
-En el metodo POST para crear una categoria se deben de enviar los siguientes valores: 
-
+```json
 {
     "nombre_categoria": "Categoria Descartable",
     "descripcion_categoria": "Categoria con el fin de eliminarse."
 }
+```
 
-En el metodo PUT para actualizar una categoria se deben de enviar al menos uno de estos valores:
+**Body para `PUT /categorias/{id}`** (al menos uno de los campos):
 
+```json
 {
     "nombre_categoria": "Categoria para pruebas de Postman 1.0",
     "descripcion_categoria": "Categoria para productos de Postman 1.0"
 }
+```
 
-Los valores mostrados que se pueden usar son ejemplos.
+### Carritos
 
-### RUTAS/ENDPOINTS DE CARRITOS.
+| Método | Endpoint | Descripción | Auth |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/carritos` | Crea un nuevo carrito | Sí |
+| `DELETE` | `/carritos/{id_carrito}` | Vacía todo el carrito | Sí |
 
-| Método | Ruta / Endpoint | Descripción | 
-| :--- | :--- | :--- |
-| `POST` | `/api/V1/carritos` | Crea un nuevo carrito |
-| `DELETE` | `/api/V1/carritos/{id_carrito}`| Vacia todo el carrito |
-| `GET` | `/api/V1/carritos/{id_carrito}/items`| Ver items de un carrito |
-| `POST` | `/api/V1/carritos/{id_carrito}/items` | Agregar un producto al carrito |
-| `DELETE` | `/api/V1/carritos/{id_carrito}/items/{id_producto}`| Elimina un producto de un carrito |
-| `PUT` | `/api/V1/carritos/{id_carrito}/items/{id_producto}`| Actualiza la cantidad de un producto de un carrito. |
+**Body para `POST /carritos`:**
 
-En el metodo POST para crear un carrito se deben enviar los siguientes valores: 
-
+```json
 {
     "user_id": 1
 }
+```
 
-En el metodo POST para agregar un producto al carrito se deben enviar los siguientes valores: 
+### Items del carrito
 
+| Método | Endpoint | Descripción | Auth |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/carritos/{id_carrito}/items` | Lista los items de un carrito | Sí |
+| `POST` | `/carritos/{id_carrito}/items` | Agrega un producto al carrito | Sí |
+| `PUT` | `/carritos/{id_carrito}/items/{id_producto}` | Actualiza la cantidad de un producto | Sí |
+| `DELETE` | `/carritos/{id_carrito}/items/{id_producto}` | Elimina un producto del carrito | Sí |
+
+**Body para `POST /carritos/{id_carrito}/items`:**
+
+```json
 {
     "producto_id": 2,
     "cantidad_producto": 4
 }
+```
 
-En el metodo PUT para actualizar la cantidad de un producto en un carrito se deben mandar los siguientes valores:
+**Body para `PUT /carritos/{id_carrito}/items/{id_producto}`:**
 
+```json
 {
     "cantidad_producto": 10
 }
+```
 
-Los valores mostrados que se pueden usar son ejemplos.
+> Si el producto ya existe en el carrito, la cantidad enviada se **suma** a la ya existente en lugar de crear un nuevo item.
 
-### RUTAS/ENDPOINTS DE LAS ORDENES
+### Órdenes
 
-| Método | Ruta / Endpoint | Descripción |
-| :--- | :--- | :--- |
-| `GET` | `/api/V1/ordenes/{id}` | Ver resumen de una orden con todos sus detalles |
-| `POST` | `/api/V1/carritos/`| Confirmar una orden |
+| Método | Endpoint | Descripción | Auth |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/ordenes/{id}` | Resumen de una orden con todos sus detalles | Sí |
+| `POST` | `/ordenes` | Confirma una orden a partir de un carrito | Sí |
 
-En el metodo POST para confirmar la orden de x carrito se deben enviar los siguientes valores: 
+**Body para `POST /ordenes`:**
+
+```json
 {
     "carrito_id": 1,
     "direccion_envio": "Calle 6",
     "metodo_pago": "Tarjeta de credito"
 }
+```
 
-Los valores mostrados que se pueden usar son ejemplos.
+> Los valores mostrados en todos los ejemplos son a modo ilustrativo.
 
+---
 
-### RUTAS/ENDPOINTS DEL AUTH
+## ✅ Testing
 
+El proyecto usa **PHPUnit** con `RefreshDatabase` para aislar cada test en una base de datos limpia.
 
-| Método | Ruta / Endpoint | Descripción |
-| :--- | :--- | :--- |
-| `GET` | `/api/V1/profile` | Ver la info del usuario que inicio session en el login. |
-| `POST` | `/api/V1/login`| Iniciar Session y obtener tu access token. |
-| `POST` | `/api/V1/register`| Crear un usuario. |
+### Correr toda la suite
 
+```shell
+php artisan test
+```
 
+### Correr solo una clase de test
 
+```shell
+php artisan test --filter=NombreDeLaClase
+```
