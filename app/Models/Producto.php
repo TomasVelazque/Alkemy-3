@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Producto extends Model
 {
+    use HasFactory;
+
     // TABLA A LA QUE HACEMOS REFERENCIA
     protected $table = 'productos';
 
@@ -24,7 +27,13 @@ class Producto extends Model
     ];
 
     //ESTABLECEMOS LA RELACION CON LAS CATEGORIAS
-    public function categorias(){
-        return $this->belongTo(Producto::class, 'categoria_id');
+    public function categoria(){
+        return $this->belongsTo(Categoria::class, 'categoria_id');
     }
+
+    # RELACION CON CARRITO ITEMS
+    public function carrito_items(){
+        return $this->hasMany(CarritoItem::class);
+    }
+
 }
